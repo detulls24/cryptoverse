@@ -1,0 +1,1025 @@
+<!DOCTYPE html>
+<html lang="ru">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport"
+        content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+    <title>CryptoVerse | Профессиональная Биржа</title>
+    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="mining/mining.css">
+    <link rel="stylesheet" href="banking/banking.css">
+    <link rel="stylesheet" href="nedvizhimost/style.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="https://unpkg.com/@supabase/supabase-js@2"></script>
+</head>
+
+<body>
+    <!-- Navigation -->
+    <nav class="main-nav">
+        <div class="nav-left">
+            <div class="logo"><i class="fa-solid fa-coins"></i> CryptoVerse</div>
+            <div class="nav-menu">
+                <a href="#" class="active" onclick="showSection('market')">Рынок</a>
+                <a href="#" onclick="showSection('exchange')">Обмен</a>
+                <a href="#" onclick="showSection('mining')">Майнинг</a>
+                <a href="#" onclick="showSection('banking')">Neo-Bank</a>
+                <a href="#" onclick="showSection('assets')">Недвижимость</a>
+                <a href="#" onclick="showSection('dashboard')" id="dashboardLink" style="display:none;">Портфель</a>
+                <a href="#" onclick="showSection('profile')" style="display:none;">Профиль</a>
+            </div>
+        </div>
+        <div class="nav-right">
+            <div class="currency-selector">
+                <select id="baseCurrency">
+                    <option value="usd">USD</option>
+                    <option value="rub">RUB</option>
+                    <option value="eur">EUR</option>
+                </select>
+            </div>
+            <div id="authButtons">
+                <button class="btn btn-outline" onclick="openModal('loginModal')">Вход</button>
+                <button class="btn btn-primary" onclick="openModal('registerModal')">Регистрация</button>
+            </div>
+            <div id="userProfile" style="display:none;">
+                <span id="userName" onclick="showSection('profile')" style="cursor:pointer;">User</span>
+                <button class="btn btn-danger" onclick="handleLogout()"><i class="fa-solid fa-power-off"></i></button>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Price Ticker -->
+    <div class="price-ticker">
+        <div class="ticker-content" id="tickerContent"></div>
+    </div>
+
+    <!-- Main Content -->
+    <main class="main-content">
+
+        <!-- Market Section -->
+        <section id="market" class="page active">
+            <div class="market-hero">
+                <div class="hero-content">
+                    <div class="market-status-badge">
+                        <span class="pulse-dot"></span>
+                        Рынок в реальном времени
+                    </div>
+                    <h1>Добро пожаловать в <span>CryptoVerse</span></h1>
+                    <p>Профессиональные инструменты для торговли, мониторинга и управления цифровыми активами.
+                        Отслеживайте котировки более 15,000 криптовалют с минимальной задержкой.</p>
+                </div>
+                <div class="market-sentiment-widget">
+                    <div class="sentiment-header">
+                        <span>Настроение рынка</span>
+                        <span class="sentiment-value greed">Extreme Greed</span>
+                    </div>
+                    <div class="sentiment-gauge">
+                        <div class="gauge-bar">
+                            <div class="gauge-fill" style="width: 78%;"></div>
+                        </div>
+                        <div class="gauge-labels">
+                            <span>Fear</span>
+                            <span>Neutral</span>
+                            <span>Greed</span>
+                        </div>
+                    </div>
+                    <p class="sentiment-desc">Рынок находится в фазе активного роста. Инвесторы проявляют высокий
+                        оптимизм.</p>
+                </div>
+            </div>
+
+            <div class="features-grid">
+                <div class="feature-item">
+                    <i class="fa-solid fa-bolt"></i>
+                    <div>
+                        <h4>Мгновенное исполнение</h4>
+                        <p>Наши алгоритмы обеспечивают обработку транзакций за миллисекунды.</p>
+                    </div>
+                </div>
+                <div class="feature-item">
+                    <i class="fa-solid fa-shield-halved"></i>
+                    <div>
+                        <h4>Безопасность Grade A+</h4>
+                        <p>Ваши активы защищены многоуровневым шифрованием и холодным хранением.</p>
+                    </div>
+                </div>
+                <div class="feature-item">
+                    <i class="fa-solid fa-chart-line"></i>
+                    <div>
+                        <h4>Продвинутая аналитика</h4>
+                        <p>Используйте профессиональные графики и индикаторы для принятия решений.</p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="market-layout">
+                <!-- Left: Chart -->
+                <div class="chart-panel card">
+                    <div class="chart-top">
+                        <div class="pair-info">
+                            <img id="chartCoinImg" src="" alt="" class="pair-icon">
+                            <div>
+                                <h2 id="chartPairName">BTC/USDT</h2>
+                                <span class="pair-type">Криптовалюта</span>
+                            </div>
+                        </div>
+                        <div class="price-block">
+                            <span class="current-price" id="chartPrice">$0.00</span>
+                            <span class="price-change positive" id="chartChange">+0.00%</span>
+                        </div>
+                    </div>
+                    <div class="chart-controls">
+                        <button class="ctrl-btn active" data-tf="1h">1Ч</button>
+                        <button class="ctrl-btn" data-tf="24h">24Ч</button>
+                        <button class="ctrl-btn" data-tf="7d">7Д</button>
+                        <button class="ctrl-btn" data-tf="30d">30Д</button>
+                    </div>
+                    <div class="chart-wrapper">
+                        <canvas id="priceChart"></canvas>
+                    </div>
+                </div>
+
+                <!-- Right: Coin List -->
+                <div class="coins-panel card">
+                    <div class="panel-header">
+                        <h3>Все Активы</h3>
+                        <div class="search-box">
+                            <i class="fa-solid fa-search"></i>
+                            <input type="text" id="coinSearch" placeholder="Поиск...">
+                        </div>
+                    </div>
+                    <div class="tabs">
+                        <button class="tab active" data-tab="crypto">Криптовалюты</button>
+                        <button class="tab" data-tab="fiat">Фиат</button>
+                        <button class="tab" data-tab="stable">Стейблкоины</button>
+                    </div>
+                    <ul class="coin-list" id="coinList"></ul>
+                </div>
+            </div>
+
+            <!-- Market Monitor Section -->
+            <div class="monitor-grid">
+                <div class="monitor-card card">
+                    <div class="monitor-header">
+                        <i class="fa-solid fa-fire-flame-curved"></i>
+                        <span>Лидеры роста</span>
+                    </div>
+                    <div class="monitor-content">
+                        <div class="movers-item">
+                            <span class="name">Solana (SOL)</span>
+                            <span class="val up">+12.4%</span>
+                        </div>
+                        <div class="movers-item">
+                            <span class="name">Fetch.ai (FET)</span>
+                            <span class="val up">+8.1%</span>
+                        </div>
+                        <div class="movers-item">
+                            <span class="name">Avalanche (AVAX)</span>
+                            <span class="val up">+5.3%</span>
+                        </div>
+                    </div>
+                </div>
+                <div class="monitor-card card">
+                    <div class="monitor-header">
+                        <i class="fa-solid fa-bolt-lightning"></i>
+                        <span>Статус систем</span>
+                    </div>
+                    <div class="monitor-content">
+                        <div class="status-row">
+                            <span>Торговый API</span>
+                            <span class="status-badge online">Online</span>
+                        </div>
+                        <div class="status-row">
+                            <span>Газ (Ethereum)</span>
+                            <span class="status-val">18 Gwei</span>
+                        </div>
+                        <div class="status-row">
+                            <span>Время блока</span>
+                            <span class="status-val">12.1s</span>
+                        </div>
+                    </div>
+                </div>
+                <div class="monitor-card card">
+                    <div class="monitor-header">
+                        <i class="fa-solid fa-chart-line"></i>
+                        <span>Обзор рынка</span>
+                    </div>
+                    <div class="monitor-content">
+                        <div class="stat-summary">
+                            <span class="label">Total Market Cap</span>
+                            <span class="value">$2.58T</span>
+                        </div>
+                        <div class="mini-trend-bar">
+                            <div class="trend-fill" style="width: 65%;"></div>
+                        </div>
+                        <span class="sub-label">Bullish Momentum: High</span>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Exchange Section -->
+        <section id="exchange" class="page">
+            <div class="exchange-layout">
+                <!-- Left Column: Advantages -->
+                <div class="exchange-info-column">
+                    <div class="info-card card">
+                        <h3><i class="fa-solid fa-gem"></i> Преимущества</h3>
+                        <ul class="advantage-list">
+                            <li><i class="fa-solid fa-check"></i> Без скрытых комиссий</li>
+                            <li><i class="fa-solid fa-check"></i> 100% ликвидность</li>
+                            <li><i class="fa-solid fa-check"></i> Поддержка 24/7</li>
+                        </ul>
+                    </div>
+                    <div class="info-card card mt-20">
+                        <h3><i class="fa-solid fa-circle-info"></i> Условия</h3>
+                        <div class="fee-row">
+                            <span>Комиссия</span>
+                            <span class="val">0.1%</span>
+                        </div>
+                        <div class="fee-row">
+                            <span>Обработка</span>
+                            <span class="val">~1 мин.</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Center: Main Exchange -->
+                <div class="exchange-main-column">
+                    <div class="exchange-panel card">
+                        <h2><i class="fa-solid fa-right-left"></i> Быстрый Обмен</h2>
+                        <div class="exchange-form">
+                            <div class="exchange-input">
+                                <label>Отдаёте</label>
+                                <div class="input-row">
+                                    <input type="number" id="fromAmount" value="1" min="0">
+                                    <select id="fromCoin">
+                                        <option value="btc">BTC</option>
+                                        <option value="eth">ETH</option>
+                                        <option value="usdt" selected>USDT</option>
+                                        <option value="rub">RUB</option>
+                                    </select>
+                                </div>
+                            </div>
+                            <button class="swap-btn" onclick="swapCoins()"><i
+                                    class="fa-solid fa-arrow-down"></i></button>
+                            <div class="exchange-input">
+                                <label>Получаете</label>
+                                <div class="input-row">
+                                    <input type="number" id="toAmount" readonly>
+                                    <select id="toCoin">
+                                        <option value="btc" selected>BTC</option>
+                                        <option value="eth">ETH</option>
+                                        <option value="usdt">USDT</option>
+                                        <option value="rub">RUB</option>
+                                    </select>
+                                </div>
+                            </div>
+                            <div class="exchange-rate" id="exchangeRate">1 USDT ≈ 0.0000112 BTC</div>
+                            <button class="btn btn-primary full-width" onclick="executeExchange()">Обменять</button>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Right Column: Popular Pairs -->
+                <div class="exchange-activity-column">
+                    <div class="activity-card card">
+                        <h3>Популярные пары</h3>
+                        <div class="popular-pairs-list">
+                            <div class="pair-item">
+                                <span class="pair">BTC/USDT</span>
+                                <span class="val">Vol: $1.2M</span>
+                            </div>
+                            <div class="pair-item">
+                                <span class="pair">ETH/USDT</span>
+                                <span class="val">Vol: $800K</span>
+                            </div>
+                            <div class="pair-item">
+                                <span class="pair">SOL/USDT</span>
+                                <span class="val">Vol: $450K</span>
+                            </div>
+                            <div class="pair-item">
+                                <span class="pair">BNB/USDT</span>
+                                <span class="val">Vol: $320K</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Mining Section -->
+        <section id="mining" class="page section container">
+            <div class="section-header">
+                <h2>Майнинг Центр</h2>
+                <p>Покупайте оборудование и получайте пассивный доход</p>
+            </div>
+
+            <div id="miningStats" class="mining-stats-row">
+                <!-- Mining stats will be loaded here -->
+            </div>
+
+            <h3>Магазин Оборудования</h3>
+            <div id="miningStoreGrid" class="mining-grid">
+                <!-- Equipment cards will be loaded here -->
+            </div>
+
+            <h3 class="mt-30" id="myEquipmentHeader" style="display:none">Моё оборудование</h3>
+            <div id="myMinersList" class="my-miners-list">
+                <!-- User's equipment will be loaded here -->
+            </div>
+        </section>
+
+        <!-- Banking Section -->
+        <section id="banking" class="page section container">
+            <div class="section-header">
+                <h2>Банковская система</h2>
+                <p>Управление фиатными счетами, внутренние переводы и Neo-Banking</p>
+            </div>
+            <div id="bankingContent">
+                <!-- Banking content will be loaded via banking.js -->
+            </div>
+        </section>
+
+        <!-- Dashboard Section -->
+        <section id="dashboard" class="page">
+            <div class="dashboard-grid">
+                <div class="balance-card card glow">
+                    <span class="balance-label">Общий Баланс</span>
+                    <h1 id="totalBalance">$0.00</h1>
+                    <div class="balance-change positive">+$0.00 (0%)</div>
+                </div>
+                <div class="quick-actions">
+                    <button class="action-btn" onclick="openPortfolioWithdrawModal()">
+                        <i class="fa-solid fa-arrow-up"></i> Вывод
+                    </button>
+                    <button class="action-btn" onclick="openBuyCryptoModal()">
+                        <i class="fa-solid fa-arrow-down"></i>
+                        Пополнить</button>
+                    <button class="action-btn" onclick="showSection('exchange')"><i class="fa-solid fa-right-left"></i>
+                        Обмен</button>
+                </div>
+            </div>
+            <div class="portfolio-table card">
+                <h3>Мои Активы</h3>
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Актив</th>
+                            <th>Баланс</th>
+                            <th>Цена</th>
+                            <th>Стоимость</th>
+                            <th>24ч</th>
+                        </tr>
+                    </thead>
+                    <tbody id="portfolioBody"></tbody>
+                </table>
+            </div>
+
+            <div class="portfolio-table card mt-30">
+                <div class="card-header-flex">
+                    <h3>История Транзакций</h3>
+                    <div id="txCount" class="tx-count">0 транзакций</div>
+                </div>
+                <div class="table-container">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Дата</th>
+                                <th>Тип</th>
+                                <th>Актив</th>
+                                <th>Количество</th>
+                                <th>Детали</th>
+                            </tr>
+                        </thead>
+                        <tbody id="transactionHistoryBody">
+                            <tr>
+                                <td colspan="5"
+                                    style="text-align: center; padding: 40px; color: var(--text-secondary);">
+                                    Загрузка истории...
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </section>
+
+        <!-- Assets Section -->
+        <section id="assets" class="page">
+            <div class="header-box">
+                <h1>Недвижимость и Люкс</h1>
+                <p>Инвестируйте в реальные активы по всему миру</p>
+            </div>
+
+            <!-- Assets Navigation Tabs -->
+            <div class="assets-tabs-container">
+                <button class="assets-tab-btn active" onclick="AssetsModule.switchTab('market')">
+                    <i class="fa-solid fa-shop"></i> Рынок
+                </button>
+                <button class="assets-tab-btn" onclick="AssetsModule.switchTab('my-assets')">
+                    <i class="fa-solid fa-briefcase"></i> Мои Активы
+                </button>
+            </div>
+
+            <!-- Market Tab Content -->
+            <div id="marketTabContent" class="assets-tab-content active">
+                <div class="assets-section-header">
+                    <h2>Рынок предложений</h2>
+                    <div id="marketFilters" class="filter-chips">
+                        <span class="chip active" onclick="AssetsModule.setFilter('all')">Все</span>
+                        <span class="chip" onclick="AssetsModule.setFilter('real_estate')">Недвижимость</span>
+                        <span class="chip" onclick="AssetsModule.setFilter('transport')">Транспорт</span>
+                        <span class="chip" onclick="AssetsModule.setFilter('archive')">Архив</span>
+                    </div>
+                </div>
+                <div id="assetsGrid" class="assets-grid-premium">
+                    <!-- Premium Cards Loading... -->
+                </div>
+            </div>
+
+            <!-- My Assets Tab Content -->
+            <div id="myAssetsTabContent" class="assets-tab-content">
+                <div class="my-assets-header">
+                    <h2>Мои приобретения</h2>
+                </div>
+                <div id="myAssetsList" class="my-assets-grid-premium">
+                    <!-- My Assets Loading... -->
+                </div>
+            </div>
+        </section>
+
+        <!-- Profile Section -->
+        <section id="profile" class="page container section">
+            <div class="profile-layout grid">
+                <div class="card profile-main">
+                    <div class="profile-header-box">
+                        <div class="profile-avatar">
+                            <i class="fa-solid fa-user"></i>
+                        </div>
+                        <div class="profile-info-text">
+                            <h2 id="profileEmail">user@example.com</h2>
+                            <span class="badge">Верифицирован</span>
+                        </div>
+                    </div>
+                    <div class="p-stat">
+                        <span class="p-label">Уровень VIP</span>
+                        <span class="p-value">Уров. 1</span>
+                    </div>
+                    <div class="p-stat">
+                        <span class="p-label">Комиссия</span>
+                        <span class="p-value">0.1%</span>
+                    </div>
+                    <div class="p-stat">
+                        <span class="p-label">Майнинг</span>
+                        <span id="profileMiningStats" class="p-value">0 шт / $0.00</span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="settings-grid mt-20">
+                <div class="card neo-card">
+                    <h3><i class="fa-solid fa-shield-halved"></i> Безопасность</h3>
+
+                    <div class="security-item">
+                        <div class="sec-icon"><i class="fa-solid fa-lock"></i></div>
+                        <div class="sec-info">
+                            <h4>Пароль</h4>
+                            <p>Рекомендуем менять раз в 3 месяца</p>
+                        </div>
+                        <button class="btn-small btn-outline"
+                            onclick="openModal('changePasswordModal')">Изменить</button>
+                    </div>
+
+                    <div class="security-item">
+                        <div class="sec-icon"><i class="fa-solid fa-mobile-screen"></i></div>
+                        <div class="sec-info">
+                            <h4>2FA Аутентификация</h4>
+                            <p class="status-off">Выключено</p>
+                        </div>
+                        <button class="btn-small btn-primary"
+                            onclick="window.showNotification('2FA', 'Функция временно недоступна', 'info')">Включить</button>
+                    </div>
+                </div>
+
+                <div class="card neo-card">
+                    <h3><i class="fa-solid fa-user-gear"></i> Настройки Профиля</h3>
+                    <div class="form-group mt-20">
+                        <label>Никнейм</label>
+                        <div class="input-wrapper">
+                            <i class="fa-solid fa-id-card"></i>
+                            <input type="text" id="userNickname" placeholder="Введите ваш никнейм">
+                        </div>
+                        <span class="input-hint">Будет отображаться вместо Email</span>
+                    </div>
+                    <button class="btn btn-primary full-width mt-20" onclick="saveProfile()">Сохранить
+                        изменения</button>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <!-- Login Modal -->
+    <div id="loginModal" class="modal">
+        <div class="modal-box">
+            <button class="close-btn" onclick="closeModal('loginModal')"><i class="fa-solid fa-xmark"></i></button>
+            <div class="modal-header">
+                <div class="modal-icon"><i class="fa-solid fa-user"></i></div>
+                <h2>Вход в аккаунт</h2>
+            </div>
+            <div class="modal-body">
+                <form id="loginForm">
+                    <div class="form-group">
+                        <label>Email</label>
+                        <div class="input-wrapper">
+                            <i class="fa-solid fa-envelope"></i>
+                            <input type="email" id="loginEmail" placeholder="example@mail.com" required>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label>Пароль</label>
+                        <div class="input-wrapper">
+                            <i class="fa-solid fa-lock"></i>
+                            <input type="password" id="loginPassword" placeholder="••••••••" required>
+                        </div>
+                    </div>
+                    <button type="submit" class="btn btn-primary full-width">Войти</button>
+                </form>
+            </div>
+            <div class="modal-footer">
+                Нет аккаунта? <a href="#"
+                    onclick="closeModal('loginModal'); openModal('registerModal')">Зарегистрироваться</a>
+            </div>
+        </div>
+    </div>
+
+    <!-- Register Modal -->
+    <div id="registerModal" class="modal">
+        <div class="modal-box">
+            <button class="close-btn" onclick="closeModal('registerModal')"><i class="fa-solid fa-xmark"></i></button>
+            <div class="modal-header">
+                <div class="modal-icon"><i class="fa-solid fa-user-plus"></i></div>
+                <h2>Регистрация</h2>
+            </div>
+            <div class="modal-body">
+                <form id="registerForm">
+                    <div class="form-group">
+                        <label>Email</label>
+                        <div class="input-wrapper">
+                            <i class="fa-solid fa-envelope"></i>
+                            <input type="email" id="regEmail" placeholder="example@mail.com" required>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label>Пароль</label>
+                        <div class="input-wrapper">
+                            <i class="fa-solid fa-lock"></i>
+                            <input type="password" id="regPassword" placeholder="Минимум 6 символов" required>
+                        </div>
+                    </div>
+                    <button type="submit" class="btn btn-primary full-width">Создать аккаунт</button>
+                </form>
+            </div>
+            <div class="modal-footer">
+                Уже есть аккаунт? <a href="#" onclick="closeModal('registerModal'); openModal('loginModal')">Войти</a>
+            </div>
+        </div>
+    </div>
+
+    <!-- Success Modal -->
+    <div id="successModal" class="modal">
+        <div class="modal-box">
+            <button class="close-btn" onclick="closeModal('successModal')"><i class="fa-solid fa-xmark"></i></button>
+            <div class="modal-header success-header">
+                <div class="modal-icon"><i class="fa-solid fa-circle-check"></i></div>
+                <h2>Успешно!</h2>
+            </div>
+            <div class="modal-body text-center">
+                <p id="successMessage" class="mt-20">Ваше действие выполнено успешно.</p>
+                <button onclick="closeModal('successModal')" class="btn btn-primary full-width mt-20">ОК</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Portfolio Withdraw Modal -->
+    <div id="portfolioWithdrawModal" class="modal">
+        <div class="modal-box" style="max-width: 450px;">
+            <button class="close-btn" onclick="closeModal('portfolioWithdrawModal')"><i
+                    class="fa-solid fa-xmark"></i></button>
+            <div class="modal-header">
+                <div class="modal-icon"><i class="fa-solid fa-building-columns"></i></div>
+                <h2>Вывод на карту</h2>
+            </div>
+            <div class="modal-body">
+                <p style="color: var(--text-secondary); margin-bottom: 20px;">Переведите средства из портфеля прямо на
+                    вашу карту Neo-Bank.</p>
+
+                <div class="form-group mb-20">
+                    <label>Актив</label>
+                    <select id="withdrawAsset" class="form-input" onchange="updateWithdrawPreview()"
+                        style="width: 100%; height: 50px; background: var(--bg-hover); border: 1px solid var(--border); color: white; border-radius: 10px; padding: 0 15px;">
+                        <!-- Dynamic coins -->
+                    </select>
+                </div>
+
+                <div class="form-group mb-20">
+                    <div
+                        style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px;">
+                        <label style="margin-bottom: 0;">Количество</label>
+                        <button onclick="setMaxWithdrawAmount()"
+                            style="color: var(--primary); font-size: 0.8rem; background: none; border: none; cursor: pointer; font-weight: 600;">MAX</button>
+                    </div>
+                    <div class="input-wrapper">
+                        <input type="number" id="withdrawAssetAmount" placeholder="0.00"
+                            oninput="updateWithdrawPreview()">
+                    </div>
+                </div>
+
+                <div id="withdrawPreview" class="commission-info"
+                    style="font-size: 0.9rem; padding: 15px; background: rgba(240, 185, 11, 0.05); border-radius: 10px; border-left: 3px solid var(--primary);">
+                    Введите сумму для расчета
+                </div>
+
+                <button class="btn btn-primary full-width mt-30" onclick="executePortfolioWithdraw()">
+                    Перевести на Neo-Bank
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Buy Crypto with Bank Modal -->
+    <div id="buyCryptoModal" class="modal">
+        <div class="modal-box" style="max-width: 420px;">
+            <button class="close-btn" onclick="closeModal('buyCryptoModal')"><i class="fa-solid fa-xmark"></i></button>
+            <div class="modal-header">
+                <div class="modal-icon"><i class="fa-solid fa-credit-card"></i></div>
+                <h2>Купить крипто</h2>
+            </div>
+            <div class="modal-body">
+                <p style="color: var(--text-secondary); margin-bottom: 20px;">Покупка активов напрямую с вашей карты
+                    Neo-Bank.</p>
+
+
+                <div class="form-group mb-20">
+                    <label>Выберите актив</label>
+                    <div class="custom-select-wrapper" style="position: relative;">
+                        <div id="buyAssetDisplay" class="custom-select-display" onclick="toggleBuyAssetDropdown()"
+                            style="width: 100%; height: 54px; background: var(--bg-hover); border: 1px solid var(--border); color: white; border-radius: 12px; padding: 0 15px; display: flex; align-items: center; justify-content: space-between; cursor: pointer; transition: all 0.2s;">
+                            <div style="display: flex; align-items: center; gap: 12px;">
+                                <img id="selectedAssetIcon" src=""
+                                    style="width: 28px; height: 28px; border-radius: 50%; display: none;">
+                                <span id="selectedAssetText">Выберите актив...</span>
+                            </div>
+                            <i class="fa-solid fa-chevron-down"
+                                style="color: var(--text-secondary); transition: transform 0.2s;"></i>
+                        </div>
+                        <div id="buyAssetDropdown" class="custom-dropdown" style="display: none;">
+                            <!-- Dynamic options will be inserted here -->
+                        </div>
+                    </div>
+                </div>
+
+
+                <div class="form-group mb-20">
+                    <label>Количество для покупки</label>
+                    <div class="input-wrapper">
+                        <input type="number" id="buyAssetAmount" placeholder="0.00" oninput="updateBuyPreview()">
+                    </div>
+                </div>
+
+                <div id="buyPreview" class="commission-info"
+                    style="font-size: 0.9rem; padding: 15px; background: rgba(240, 185, 11, 0.05); border-radius: 10px; border-left: 3px solid var(--primary);">
+                    Введите количество для расчета стоимости
+                </div>
+
+                <button class="btn btn-primary full-width mt-20" onclick="executeBuyCrypto()">Купить (Комиссия
+                    1.25%)</button>
+            </div>
+        </div>
+    </div>
+    <div id="bankConfirmModal" class="modal">
+        <div class="modal-box" style="max-width: 450px;">
+            <button class="close-btn" onclick="closeModal('bankConfirmModal')"><i
+                    class="fa-solid fa-xmark"></i></button>
+            <div class="modal-header"
+                style="background: rgba(240, 185, 11, 0.1); border-color: rgba(240, 185, 11, 0.2);">
+                <div class="modal-icon" style="color: var(--primary);"><i class="fa-solid fa-shield-halved"></i></div>
+                <h2>Подтверждение перевода</h2>
+            </div>
+            <div class="modal-body">
+                <div class="confirm-details"
+                    style="background: var(--bg-hover); padding: 20px; border-radius: 12px; margin-bottom: 20px;">
+                    <div style="margin-bottom: 15px;">
+                        <span
+                            style="color: var(--text-secondary); font-size: 0.8rem; display: block; margin-bottom: 4px;">ОТ
+                            КОГО</span>
+                        <b id="confirmFrom" style="font-size: 1.1rem; color: var(--text);">...</b>
+                    </div>
+                    <div style="margin-bottom: 15px;">
+                        <span
+                            style="color: var(--text-secondary); font-size: 0.8rem; display: block; margin-bottom: 4px;">КОМУ
+                            (СЧЕТ)</span>
+                        <b id="confirmToAccount"
+                            style="font-size: 1.1rem; color: var(--text); font-family: 'Courier New', monospace;">...</b>
+                        <p id="confirmToName" style="color: var(--primary); margin-top: 4px; font-weight: 600;">...</p>
+                    </div>
+                    <div>
+                        <span
+                            style="color: var(--text-secondary); font-size: 0.8rem; display: block; margin-bottom: 4px;">СУММА</span>
+                        <b id="confirmAmount" style="font-size: 1.5rem; color: var(--primary);">$0.00</b>
+                    </div>
+                </div>
+
+                <div
+                    style="padding: 15px; background: rgba(246, 70, 93, 0.1); border-radius: 10px; border: 1px solid rgba(246, 70, 93, 0.2); margin-bottom: 25px;">
+                    <p style="color: var(--danger); font-size: 0.85rem; line-height: 1.4;">
+                        <i class="fa-solid fa-triangle-exclamation"></i>
+                        <b>Внимание:</b> Эта операция необратима. Убедитесь в правильности данных. Отменить перевод
+                        будет невозможно.
+                    </p>
+                </div>
+
+                <button class="btn btn-primary full-width" onclick="confirmBankTransfer()">Подтверждаю перевод</button>
+                <button class="btn btn-outline full-width mt-10"
+                    onclick="closeModal('bankConfirmModal')">Отмена</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- System Confirmation Modal -->
+    <div id="systemConfirmModal" class="modal" style="z-index: 2000;">
+        <div class="modal-box system-confirm-box">
+            <div class="modal-header">
+                <div class="modal-icon">
+                    <i class="fa-solid fa-circle-question"></i>
+                </div>
+            </div>
+            <div class="modal-body">
+                <h2 id="sysConfirmTitle" style="margin-bottom: 10px;">Подтверждение</h2>
+                <p id="sysConfirmMessage" style="color: var(--text-secondary); margin-bottom: 25px; line-height: 1.5;">
+                    Вы уверены?
+                </p>
+                <div style="display: flex; gap: 10px;">
+                    <button id="sysConfirmCancelBtn" class="btn btn-outline full-width">Отмена</button>
+                    <button id="sysConfirmOkBtn" class="btn btn-primary full-width">Подтвердить</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Mobile Bottom Navigation -->
+    <nav class="mobile-nav">
+        <div class="mobile-nav-items">
+            <a href="#" class="mobile-nav-item active" onclick="showSection('market'); setMobileActive(this)">
+                <i class="fa-solid fa-chart-line"></i>
+                <span>Рынок</span>
+            </a>
+            <a href="#" class="mobile-nav-item" onclick="showSection('exchange'); setMobileActive(this)">
+                <i class="fa-solid fa-right-left"></i>
+                <span>Обмен</span>
+            </a>
+            <a href="#" class="mobile-nav-item" id="mobileMining"
+                onclick="showSection('mining'); setMobileActive(this)">
+                <i class="fa-solid fa-microchip"></i>
+                <span>Майнинг</span>
+            </a>
+            <a href="#" class="mobile-nav-item" id="mobilePortfolio" style="display:none"
+                onclick="showSection('dashboard'); setMobileActive(this)">
+                <i class="fa-solid fa-wallet"></i>
+                <span>Портфель</span>
+            </a>
+            <a href="#" class="mobile-nav-item" onclick="openMobileMenu()">
+                <i class="fa-solid fa-bars"></i>
+                <span>Меню</span>
+            </a>
+        </div>
+    </nav>
+
+    <!-- Change Password Modal -->
+    <div id="changePasswordModal" class="modal">
+        <div class="modal-box" style="max-width: 420px;">
+            <button class="close-btn" onclick="closeModal('changePasswordModal')"><i
+                    class="fa-solid fa-xmark"></i></button>
+            <div class="modal-header">
+                <div class="modal-icon"><i class="fa-solid fa-lock"></i></div>
+                <h2>Смена пароля</h2>
+            </div>
+            <div class="modal-body">
+                <p style="color: var(--text-secondary); margin-bottom: 20px;">
+                    Введите новый пароль. После смены вы будете автоматически вышли из системы на всех устройствах.
+                </p>
+
+                <div class="form-group mb-20">
+                    <label>Новый пароль</label>
+                    <div class="input-wrapper">
+                        <i class="fa-solid fa-key"></i>
+                        <input type="password" id="newPassword" placeholder="Минимум 6 символов">
+                    </div>
+                </div>
+
+                <div class="form-group mb-20">
+                    <label>Подтвердите пароль</label>
+                    <div class="input-wrapper">
+                        <i class="fa-solid fa-check-double"></i>
+                        <input type="password" id="confirmNewPassword" placeholder="Повторите пароль">
+                    </div>
+                </div>
+
+                <button class="btn btn-primary full-width mt-10" onclick="executeChangePassword()">
+                    Сменить пароль
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Change Password Modal -->
+    <div id="changePasswordModal" class="modal">
+        <div class="modal-box" style="max-width: 420px;">
+            <button class="close-btn" onclick="closeModal('changePasswordModal')"><i
+                    class="fa-solid fa-xmark"></i></button>
+            <div class="modal-header">
+                <div class="modal-icon"><i class="fa-solid fa-lock"></i></div>
+                <h2>Смена пароля</h2>
+            </div>
+            <div class="modal-body">
+                <p style="color: var(--text-secondary); margin-bottom: 20px;">
+                    Введите новый пароль. После смены вы будете автоматически вышли из системы на всех устройствах.
+                </p>
+
+                <div class="form-group mb-20">
+                    <label>Новый пароль</label>
+                    <div class="input-wrapper">
+                        <i class="fa-solid fa-key"></i>
+                        <input type="password" id="newPassword" placeholder="Минимум 6 символов">
+                    </div>
+                </div>
+
+                <div class="form-group mb-20">
+                    <label>Подтвердите пароль</label>
+                    <div class="input-wrapper">
+                        <i class="fa-solid fa-check-double"></i>
+                        <input type="password" id="confirmNewPassword" placeholder="Повторите пароль">
+                    </div>
+                </div>
+
+                <button class="btn btn-primary full-width mt-10" onclick="executeChangePassword()">
+                    Сменить пароль
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Buy Miner Modal -->
+    <div id="buyMinerModal" class="modal">
+        <div class="modal-box" style="max-width: 450px;">
+            <button class="close-btn" onclick="closeModal('buyMinerModal')"><i class="fa-solid fa-xmark"></i></button>
+            <div class="modal-header">
+                <div class="modal-icon"><i class="fa-solid fa-microchip"></i></div>
+                <h2>Покупка оборудования</h2>
+            </div>
+            <div class="modal-body">
+                <div id="buyMinerInfo" class="miner-buy-info mb-20">
+                    <!-- Dynamic Info -->
+                </div>
+
+                <div class="form-group mb-20">
+                    <label>Количество</label>
+                    <div class="input-wrapper">
+                        <input type="number" id="minerQuantity" value="1" min="1" oninput="updateMinerTotal()">
+                    </div>
+                </div>
+
+                <div class="form-group mb-20">
+                    <label>Способ оплаты</label>
+                    <div class="payment-methods">
+                        <label class="payment-method selected" onclick="selectMinerPayment('crypto', this)">
+                            <input type="radio" name="minerPayment" value="crypto" checked style="display:none">
+                            <i class="fa-brands fa-usdt" style="color: #26a17b;"></i>
+                            <div class="pm-info">
+                                <span class="pm-name">Crypto Wallet</span>
+                                <span class="pm-desc">USDT Balance</span>
+                            </div>
+                        </label>
+                        <label class="payment-method" onclick="selectMinerPayment('bank', this)">
+                            <input type="radio" name="minerPayment" value="bank" style="display:none">
+                            <i class="fa-solid fa-credit-card" style="color: var(--primary);"></i>
+                            <div class="pm-info">
+                                <span class="pm-name">Neo-Bank</span>
+                                <span class="pm-desc">Fiat Balance</span>
+                            </div>
+                        </label>
+                    </div>
+                </div>
+
+                <div class="total-cost-box mb-20">
+                    <span>Итого к оплате:</span>
+                    <span id="minerTotalCost" class="cost-value">$0.00</span>
+                </div>
+
+                <button class="btn btn-primary full-width" onclick="confirmBuyMiner()">Купить оборудование</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Buy Real Estate/Asset Modal -->
+    <div id="buyAssetModal" class="modal">
+        <div class="modal-box" style="max-width: 450px;">
+            <button class="close-btn" onclick="closeModal('buyAssetModal')"><i class="fa-solid fa-xmark"></i></button>
+            <div class="modal-header">
+                <div class="modal-icon"><i class="fa-solid fa-house-chimney"></i></div>
+                <h2>Покупка актива</h2>
+            </div>
+            <div class="modal-body">
+                <div id="buyAssetInfo" class="asset-buy-info mb-20">
+                    <!-- Dynamic Info -->
+                </div>
+
+                <div class="form-group mb-20">
+                    <label>Способ оплаты</label>
+                    <div class="payment-methods">
+                        <label class="payment-method selected" onclick="AssetsModule.selectPayment('crypto', this)">
+                            <input type="radio" name="assetPayment" value="crypto" checked style="display:none">
+                            <i class="fa-solid fa-circle-dollar-to-slot" style="color: #26a17b;"></i>
+                            <div class="pm-info">
+                                <span class="pm-name">Crypto Wallet</span>
+                                <span class="pm-desc">USDT Balance</span>
+                            </div>
+                        </label>
+                        <label class="payment-method" onclick="AssetsModule.selectPayment('bank', this)">
+                            <input type="radio" name="assetPayment" value="bank" style="display:none">
+                            <i class="fa-solid fa-credit-card" style="color: var(--primary);"></i>
+                            <div class="pm-info">
+                                <span class="pm-name">Neo-Bank</span>
+                                <span class="pm-desc">Fiat Balance</span>
+                            </div>
+                        </label>
+                    </div>
+                </div>
+
+                <div class="total-cost-box mb-20">
+                    <span>Стоимость:</span>
+                    <span id="assetTotalCost" class="cost-value">$0.00</span>
+                </div>
+
+                <button class="btn btn-primary full-width" onclick="AssetsModule.confirmBuy()">Подтвердить
+                    покупку</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Mobile Menu Bottom Sheet -->
+    <div id="mobileMenuModal" class="mobile-menu-modal">
+        <div class="mobile-menu-overlay" onclick="closeMobileMenu()"></div>
+        <div class="mobile-menu-content">
+            <div class="mobile-menu-header">
+                <h3>Меню</h3>
+                <button class="close-menu-btn" onclick="closeMobileMenu()"><i class="fa-solid fa-xmark"></i></button>
+            </div>
+            <div class="mobile-menu-grid">
+                <div class="menu-item"
+                    onclick="closeMobileMenu(); showSection('banking'); document.getElementById('mobileBank').click();">
+                    <div class="menu-icon"><i class="fa-solid fa-building-columns"></i></div>
+                    <span>Банк</span>
+                </div>
+                <div class="menu-item" onclick="closeMobileMenu(); showSection('assets');">
+                    <div class="menu-icon"><i class="fa-solid fa-plane-up"></i></div>
+                    <span>Assets</span>
+                </div>
+                <div class="menu-item" id="menuProfile" style="display:none"
+                    onclick="closeMobileMenu(); showSection('profile');">
+                    <div class="menu-icon"><i class="fa-solid fa-user"></i></div>
+                    <span>Профиль</span>
+                </div>
+                <!-- Future items can be added here easily -->
+                <div class="menu-item" onclick="closeMobileMenu(); alert('В разработке')">
+                    <div class="menu-icon"><i class="fa-solid fa-gear"></i></div>
+                    <span>Настройки</span>
+                </div>
+                <div class="menu-item" onclick="closeMobileMenu(); alert('В разработке')">
+                    <div class="menu-icon"><i class="fa-solid fa-headset"></i></div>
+                    <span>Поддержка</span>
+                </div>
+
+                <!-- Auth items for visibility control -->
+                <div class="menu-item" id="menuLogin" onclick="closeMobileMenu(); openModal('loginModal')">
+                    <div class="menu-icon"><i class="fa-solid fa-right-to-bracket"></i></div>
+                    <span>Вход</span>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Core Scripts -->
+    <script src="js/init.js"></script>
+    <script src="js/market.js"></script>
+    <script src="js/auth.js"></script>
+    <script src="js/ui.js"></script>
+    <script src="js/app.js"></script>
+    <script src="mining/mining.js"></script>
+    <script src="banking/banking.js"></script>
+    <script src="nedvizhimost/assets.js"></script>
+</body>
+
+</html>

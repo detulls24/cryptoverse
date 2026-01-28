@@ -1,0 +1,763 @@
+/* 1. Hero-Style Header & Navigation */
+#assets .header-box {
+    margin-bottom: 60px;
+    position: relative;
+    padding-top: 40px;
+}
+
+#assets .header-box h1 {
+    font-size: 3.5rem;
+    font-weight: 900;
+    background: linear-gradient(135deg, #fff 0%, var(--primary) 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    margin-bottom: 15px;
+    letter-spacing: -1.5px;
+}
+
+#assets .header-box::before {
+    content: '';
+    position: absolute;
+    top: -50px;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 300px;
+    height: 300px;
+    background: radial-gradient(circle, rgba(240, 185, 11, 0.1) 0%, transparent 70%);
+    filter: blur(40px);
+    z-index: -1;
+}
+
+.assets-tabs-container {
+    display: flex;
+    justify-content: center;
+    gap: 15px;
+    margin-bottom: 50px;
+    background: rgba(30, 35, 41, 0.4);
+    padding: 8px;
+    border-radius: 20px;
+    width: fit-content;
+    margin-left: auto;
+    margin-right: auto;
+    border: 1px solid rgba(255, 255, 255, 0.05);
+    backdrop-filter: blur(15px);
+}
+
+.assets-tab-btn {
+    background: transparent;
+    border: none;
+    color: var(--text-secondary);
+    padding: 12px 24px;
+    border-radius: 12px;
+    font-size: 1rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.3s var(--ease);
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.assets-tab-btn.active {
+    background: var(--bg-hover);
+    color: var(--primary);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+}
+
+.assets-tab-btn:hover:not(.active) {
+    color: var(--text);
+    background: rgba(255, 255, 255, 0.05);
+}
+
+.assets-tab-content {
+    display: none;
+    animation: fadeInTab 0.4s ease forwards;
+}
+
+.assets-tab-content.active {
+    display: block;
+}
+
+@keyframes fadeInTab {
+    from {
+        opacity: 0;
+        transform: translateY(10px);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+/* 2. Premium Market Grid Expansion */
+.assets-grid-premium {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(420px, 1fr));
+    gap: 40px;
+    padding-bottom: 80px;
+}
+
+/* 3. Premium Asset Card */
+.asset-card-premium {
+    background: var(--bg-card);
+    border-radius: 20px;
+    overflow: hidden;
+    border: 1px solid var(--border);
+    transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+    position: relative;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+    display: flex;
+    flex-direction: column;
+}
+
+.asset-card-premium:hover {
+    transform: translateY(-10px) scale(1.02);
+    border-color: var(--primary);
+    box-shadow: 0 20px 40px rgba(240, 185, 11, 0.15);
+}
+
+.asset-img-premium {
+    height: 280px;
+    width: 100%;
+    background-size: cover;
+    background-position: center;
+    position: relative;
+    transition: transform 0.6s cubic-bezier(0.165, 0.84, 0.44, 1);
+}
+
+.asset-card-premium:hover .asset-img-premium {
+    transform: scale(1.08);
+}
+
+.asset-img-premium::after {
+    content: '';
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    width: 100%;
+    height: 60%;
+    background: linear-gradient(to top, rgba(11, 14, 17, 0.9), transparent);
+}
+
+.asset-badge-premium {
+    position: absolute;
+    top: 20px;
+    left: 20px;
+    background: rgba(255, 255, 255, 0.1);
+    backdrop-filter: blur(12px);
+    color: #fff;
+    padding: 8px 18px;
+    border-radius: 12px;
+    font-size: 0.8rem;
+    font-weight: 700;
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    z-index: 2;
+}
+
+.asset-content-premium {
+    padding: 24px;
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+}
+
+.asset-content-premium h3 {
+    font-size: 1.4rem;
+    margin-bottom: 10px;
+    color: var(--text);
+    font-weight: 700;
+}
+
+.asset-desc-premium {
+    color: var(--text-secondary);
+    font-size: 0.9rem;
+    line-height: 1.5;
+    margin-bottom: 20px;
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+    flex-grow: 1;
+}
+
+.asset-footer-premium {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-top: auto;
+    padding-top: 20px;
+    border-top: 1px solid rgba(255, 255, 255, 0.05);
+}
+
+.asset-price-premium {
+    font-size: 1.8rem;
+    font-weight: 900;
+    color: var(--primary);
+    text-shadow: 0 0 25px rgba(240, 185, 11, 0.3);
+}
+
+.btn-buy-premium {
+    padding: 10px 24px;
+    border-radius: 12px;
+    font-size: 0.95rem;
+    font-weight: 600;
+    background: var(--bg-hover);
+    color: var(--text);
+    border: 1px solid var(--border);
+    cursor: pointer;
+    transition: all 0.3s;
+}
+
+.btn-buy-premium:hover {
+    background: var(--primary);
+    color: #0b0e11;
+    border-color: var(--primary);
+    box-shadow: 0 4px 15px rgba(240, 185, 11, 0.4);
+}
+
+/* 4. My Assets Premium Grid */
+.my-assets-grid-premium {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+    gap: 20px;
+    margin-top: 24px;
+}
+
+.my-asset-card-premium {
+    background: var(--bg-card);
+    border-radius: 16px;
+    padding: 16px;
+    border: 1px solid var(--border);
+    display: flex;
+    align-items: center;
+    gap: 20px;
+    transition: all 0.3s;
+}
+
+.my-asset-card-premium:hover {
+    background: var(--bg-hover);
+    border-color: var(--text-secondary);
+    transform: translateX(5px);
+}
+
+.my-asset-img-small {
+    width: 80px;
+    height: 80px;
+    border-radius: 12px;
+    background-size: cover;
+    background-position: center;
+    flex-shrink: 0;
+    border: 1px solid var(--border);
+}
+
+.my-asset-info-premium h4 {
+    font-size: 1.1rem;
+    margin-bottom: 6px;
+    color: var(--text);
+}
+
+.my-asset-date {
+    font-size: 0.8rem;
+    color: var(--text-secondary);
+    display: flex;
+    align-items: center;
+    gap: 6px;
+}
+
+/* 5. Pagination (Shared with Banking Style) */
+.assets-pagination {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 15px;
+    margin-top: 40px;
+}
+
+/* Reusing .btn-micro from banking.css, ensure it's loaded or duplicate here if needed.
+   Let's duplicate to be safe cleanly or assume global. styling. */
+.btn-micro {
+    width: 40px;
+    height: 40px;
+    border-radius: 12px;
+    background: var(--bg-hover);
+    border: 1px solid var(--border);
+    color: var(--text);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    transition: all 0.3s;
+    font-size: 1rem;
+}
+
+.btn-micro:hover {
+    background: var(--primary);
+    color: #0b0e11;
+    transform: translateY(-2px);
+}
+
+.btn-micro.disabled {
+    opacity: 0.3;
+    pointer-events: none;
+}
+
+@media (max-width: 768px) {
+    .assets-grid-premium {
+        grid-template-columns: 1fr;
+    }
+
+    .my-asset-card-premium {
+        flex-direction: column;
+        align-items: flex-start;
+    }
+
+    .my-asset-img-small {
+        width: 100%;
+        height: 140px;
+    }
+}
+
+.assets-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
+    /* Smaller cards */
+    gap: 20px;
+}
+
+.asset-card {
+    background: #1e2026;
+    border: 1px solid #2b3139;
+    border-radius: 12px;
+    /* Smaller radius */
+    overflow: hidden;
+    transition: transform 0.2s;
+    display: flex;
+    flex-direction: column;
+}
+
+.asset-card:hover {
+    transform: translateY(-5px);
+    border-color: var(--primary);
+}
+
+.asset-img {
+    height: 150px;
+    /* Reduced height */
+    background-size: cover;
+    background-position: center;
+    position: relative;
+}
+
+.asset-type-badge {
+    position: absolute;
+    top: 10px;
+    left: 10px;
+    background: rgba(0, 0, 0, 0.7);
+    color: white;
+    padding: 3px 10px;
+    border-radius: 15px;
+    font-size: 0.7rem;
+    backdrop-filter: blur(4px);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.asset-content {
+    padding: 15px;
+    /* Reduced padding */
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+}
+
+.asset-content h3 {
+    margin-bottom: 8px;
+    font-size: 1.1rem;
+    /* Smaller font */
+    color: var(--text);
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.asset-desc {
+    color: var(--text-secondary);
+    font-size: 0.85rem;
+    line-height: 1.4;
+    margin-bottom: 15px;
+    flex: 1;
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    /* Limit text lines */
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+}
+
+.asset-footer {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-top: auto;
+}
+
+.asset-price {
+    font-size: 1rem;
+    font-weight: 700;
+    color: var(--primary);
+}
+
+.btn-sm {
+    padding: 6px 12px;
+    font-size: 0.85rem;
+}
+
+/* Pagination */
+.assets-pagination {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 15px;
+    margin-top: 30px;
+}
+
+.pag-btn {
+    background: #2b3139;
+    border: none;
+    color: white;
+    width: 36px;
+    height: 36px;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: all 0.2s;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.pag-btn:hover:not(:disabled) {
+    background: var(--primary);
+    color: black;
+}
+
+.pag-btn:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+}
+
+.pag-info {
+    color: var(--text-secondary);
+    font-size: 0.9rem;
+}
+
+/* My Assets List */
+.my-assets-container {
+    background: #1e2026;
+    border-radius: 16px;
+    padding: 20px;
+    margin-bottom: 30px;
+}
+
+.my-assets-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+    gap: 15px;
+    margin-top: 15px;
+}
+
+.my-asset-item {
+    background: rgba(255, 255, 255, 0.03);
+    border-radius: 12px;
+    padding: 10px;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+}
+
+.my-asset-img {
+    width: 60px;
+    height: 60px;
+    border-radius: 8px;
+    background-size: cover;
+    background-position: center;
+}
+
+.my-asset-info h4 {
+    font-size: 0.9rem;
+    margin-bottom: 4px;
+}
+
+/* 6. Section Headers & Filters */
+.header-box {
+    text-align: center;
+    margin-bottom: 30px;
+}
+
+.assets-section-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 25px;
+    flex-wrap: wrap;
+    gap: 15px;
+}
+
+.assets-section-header h2 {
+    font-size: 1.5rem;
+    font-weight: 700;
+}
+
+.filter-chips {
+    display: flex;
+    gap: 10px;
+    background: rgba(255, 255, 255, 0.03);
+    padding: 4px;
+    border-radius: 12px;
+    border: 1px solid var(--border);
+}
+
+.chip {
+    padding: 8px 16px;
+    border-radius: 8px;
+    font-size: 0.9rem;
+    color: var(--text-secondary);
+    cursor: pointer;
+    transition: all 0.3s;
+    user-select: none;
+}
+
+.chip:hover {
+    color: var(--text);
+    background: rgba(255, 255, 255, 0.05);
+}
+
+.chip.active {
+    background: var(--bg-hover);
+    color: var(--primary);
+    font-weight: 600;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
+}
+
+/* Ensure pagination is consistent */
+.assets-pagination {
+    margin-top: 40px;
+}
+
+/* 7. Buy Asset Modal Styles */
+.asset-buy-info {
+    background: rgba(255, 255, 255, 0.03);
+    padding: 15px;
+    border-radius: 12px;
+    border: 1px solid var(--border);
+}
+
+.payment-methods {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 12px;
+}
+
+.payment-method {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 12px;
+    background: rgba(255, 255, 255, 0.03);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    cursor: pointer;
+    transition: all 0.2s;
+}
+
+.payment-method:hover {
+    background: rgba(255, 255, 255, 0.05);
+    border-color: rgba(255, 255, 255, 0.2);
+}
+
+.payment-method.selected {
+    background: rgba(240, 185, 11, 0.05);
+    border-color: var(--primary);
+    box-shadow: 0 0 15px rgba(240, 185, 11, 0.1);
+}
+
+.payment-method i {
+    font-size: 1.4rem;
+    width: 25px;
+    text-align: center;
+    flex-shrink: 0;
+}
+
+.pm-info {
+    display: flex;
+    flex-direction: column;
+    min-width: 0;
+}
+
+.pm-name {
+    font-weight: 600;
+    color: var(--text);
+    font-size: 0.85rem;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.pm-desc {
+    font-size: 0.7rem;
+    color: var(--text-secondary);
+}
+
+.total-cost-box {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding-top: 20px;
+    border-top: 1px solid var(--border);
+    margin-top: 20px;
+}
+
+.total-cost-box span:first-child {
+    font-weight: 600;
+    color: var(--text-secondary);
+    font-size: 1rem;
+}
+
+.total-cost-box .cost-value {
+    font-size: 1.3rem;
+    font-weight: 800;
+    color: var(--primary);
+}
+
+.qty-badge {
+    background: rgba(255, 255, 255, 0.05);
+    color: var(--text-secondary);
+    padding: 2px 8px;
+    border-radius: 6px;
+    font-size: 0.75rem;
+    font-weight: 600;
+    border: 1px solid var(--border);
+}
+
+.qty-badge.sold-out {
+    background: rgba(246, 70, 93, 0.1);
+    color: var(--danger);
+    border-color: rgba(246, 70, 93, 0.2);
+    font-weight: 800;
+}
+
+/* 5. Background Decorations */
+#assets {
+    position: relative;
+    overflow: hidden;
+}
+
+#assets::before {
+    content: '';
+    position: absolute;
+    top: 20%;
+    right: -10%;
+    width: 600px;
+    height: 600px;
+    background: radial-gradient(circle, rgba(240, 185, 11, 0.03) 0%, transparent 70%);
+    z-index: -1;
+    pointer-events: none;
+}
+
+#assets::after {
+    content: '';
+    position: absolute;
+    bottom: 5%;
+    left: -5%;
+    width: 800px;
+    height: 800px;
+    background: radial-gradient(circle, rgba(240, 185, 11, 0.05) 0%, transparent 70%);
+    z-index: -1;
+    pointer-events: none;
+}
+
+/* 6. Mobile Responsiveness */
+@media (max-width: 768px) {
+    #assets .header-box {
+        margin-bottom: 40px;
+        padding-top: 20px;
+        text-align: center;
+    }
+
+    #assets .header-box h1 {
+        font-size: 2.2rem !important;
+        letter-spacing: -1px;
+        line-height: 1.2;
+    }
+
+    #assets .header-box p {
+        font-size: 0.9rem;
+        padding: 0 15px;
+    }
+
+    .assets-tabs-container {
+        width: 90%;
+        max-width: 350px;
+        gap: 8px;
+        margin-bottom: 30px;
+    }
+
+    .assets-tab-btn {
+        padding: 10px 15px;
+        font-size: 0.9rem;
+        flex: 1;
+        justify-content: center;
+    }
+
+    .assets-section-header {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 15px;
+        margin-bottom: 25px;
+        padding: 0 15px;
+    }
+
+    .filter-chips {
+        width: 100%;
+        overflow-x: auto;
+        padding-bottom: 10px;
+        display: flex;
+        gap: 10px;
+        -webkit-overflow-scrolling: touch;
+    }
+
+    .chip {
+        white-space: nowrap;
+        flex-shrink: 0;
+    }
+
+    .assets-grid-premium {
+        grid-template-columns: 1fr;
+        gap: 25px;
+        padding: 0 15px 40px;
+    }
+
+    .asset-img-premium {
+        height: 220px;
+    }
+
+    .asset-content-premium h3 {
+        font-size: 1.2rem;
+    }
+
+    .asset-price-premium {
+        font-size: 1.5rem;
+    }
+
+    #assets::before {
+        width: 250px;
+        height: 250px;
+        top: 10%;
+    }
+
+    #assets::after {
+        width: 300px;
+        height: 300px;
+        bottom: 5%;
+    }
+}
